@@ -44,7 +44,7 @@ func main() {
 			case string:
 				frequencies[x]++
 			default:
-				log.Fatal("Field is not string")
+				log.Fatal("Field is not a string")
 			}
 		}
 	}
