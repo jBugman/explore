@@ -14,10 +14,9 @@ import (
 const outputFileName string = "output.csv"
 
 func Run(field, folder string) error {
-	files, err := filepath.Glob(folder + "*.json")
+	files, err := filepath.Glob(filepath.Join(folder, "*.json"))
 	if err != nil {
 		return err
-		// log.Fatal(err)
 	}
 
 	frequencies := make(map[string]int)
@@ -25,19 +24,16 @@ func Run(field, folder string) error {
 	for _, file := range files {
 		bytes, err := ioutil.ReadFile(file)
 		if err != nil {
-			// log.Fatal(err)
 			return err
 		}
 
 		var data map[string]interface{}
 		if err := json.Unmarshal(bytes, &data); err != nil {
-			// log.Fatal(err, file)
 			return err
 		}
 
 		if value, ok := data[field]; !ok {
 			return errors.New("Field is missing")
-			// log.Fatal("Field is missing")
 		} else {
 			switch x := value.(type) {
 			case string:
@@ -46,14 +42,12 @@ func Run(field, folder string) error {
 				}
 			default:
 				return errors.New("Field is not a string")
-				// log.Fatal("Field is not a string")
 			}
 		}
 	}
 
 	outputFile, err := os.Create(outputFileName)
 	if err != nil {
-		// panic(err)
 		return err
 	}
 	defer outputFile.Close()
@@ -69,8 +63,7 @@ func Run(field, folder string) error {
 		csvWriter.Write(line)
 	}
 	csvWriter.Flush()
-	// return csvWriter.Error()
-	return nil
+	return csvWriter.Error()
 }
 
 /*
@@ -99,7 +92,6 @@ func sortMapByValue(m map[string]int) PairList {
 		p[i] = Pair{k, v}
 		i++
 	}
-	// log.Println(&p)
 	sort.Sort(p)
 	return p
 }
