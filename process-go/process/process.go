@@ -1,10 +1,10 @@
-package main
+package process
 
 import (
 	"encoding/csv"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"sort"
@@ -13,17 +13,11 @@ import (
 
 const outputFileName string = "output.csv"
 
-func main() {
-	args := os.Args
-	if len(args) < 3 {
-		log.Fatal("Args are: <field name> <folder>")
-	}
-	field := args[1]
-	folder := args[2]
-
+func Run(field, folder string) error {
 	files, err := filepath.Glob(folder + "*.json")
 	if err != nil {
-		log.Fatal(err)
+		return err
+		// log.Fatal(err)
 	}
 
 	frequencies := make(map[string]int)
@@ -31,27 +25,36 @@ func main() {
 	for _, file := range files {
 		bytes, err := ioutil.ReadFile(file)
 		if err != nil {
-			log.Fatal(err)
+			// log.Fatal(err)
+			return err
 		}
+
 		var data map[string]interface{}
 		if err := json.Unmarshal(bytes, &data); err != nil {
-			log.Fatal(err, file)
+			// log.Fatal(err, file)
+			return err
 		}
+
 		if value, ok := data[field]; !ok {
-			log.Fatal("Field is missing")
+			return errors.New("Field is missing")
+			// log.Fatal("Field is missing")
 		} else {
 			switch x := value.(type) {
 			case string:
-				frequencies[x]++
+				if x != "" {
+					frequencies[x]++
+				}
 			default:
-				log.Fatal("Field is not a string")
+				return errors.New("Field is not a string")
+				// log.Fatal("Field is not a string")
 			}
 		}
 	}
 
 	outputFile, err := os.Create(outputFileName)
 	if err != nil {
-		panic(err)
+		// panic(err)
+		return err
 	}
 	defer outputFile.Close()
 
@@ -66,6 +69,8 @@ func main() {
 		csvWriter.Write(line)
 	}
 	csvWriter.Flush()
+	// return csvWriter.Error()
+	return nil
 }
 
 /*
