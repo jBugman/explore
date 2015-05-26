@@ -1,9 +1,7 @@
-Interactive
+Hardcoded as test
 
 	mix deps.get
-	iex -S mix
-	c "lib/process.ex"
-	Process.CLI.main ["Name", "../test_data"]
+	mix test
 
 Standalone
 

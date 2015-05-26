@@ -27,7 +27,9 @@ defmodule Process.Mixfile do
   #   {:mydep, git: "https://github.com/elixir-lang/mydep.git", tag: "0.1.0"}
   #
   # Type `mix help deps` for more examples and options
-  defp deps do
-    [{:poison, "~> 1.3"}]
+  defp deps do [
+      {:poison, "~> 1.3"},
+      {:csv, "~> 1.0.0"}
+    ]
   end
 end

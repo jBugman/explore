@@ -1,28 +1,42 @@
 require Logger
 require Poison
+require CSV
 
 defmodule Process.CLI do
   def main(args) do
     case args do
-      [field, folder] -> (
-        values = for file <- glob(folder, ".json"),
-            contents = File.read!(file),
-            json = Poison.decode!(contents, as: %{}) do
-          case json[field] do
-            nil -> Logger.error "Field is missing"
-            x when not is_binary(x) -> Logger.error "Field is not a string"
-            text -> text
-          end
-        end
-        filtered = for x <- values, x != "" do x end
-        frequencies = Enum.reduce filtered, %{}, fn(x, acc) ->
-          Map.update(acc, x, 1, &(&1 + 1))
-        end
-
-        IO.inspect frequencies
-      )
+      [field, folder] -> process(field, folder)
       _ -> Logger.error "Args are: <field name> <folder>"
     end
+  end
+
+  def process(field, folder) do
+    values = for file <- glob(folder, ".json"),
+        contents = File.read!(file),
+        json = Poison.decode!(contents, as: %{}) do
+      case json[field] do
+        nil -> raise "Field is missing"
+        x when not is_binary(x) -> raise "Field is not a string"
+        text -> text
+      end
+    end
+
+    frequencies = values
+      |> Enum.filter(&(&1 != ""))
+      |> Enum.reduce(%{}, fn(x, acc) -> Map.update(acc, x, 1, &(&1 + 1)) end)
+
+    sorted_list = Map.to_list(frequencies)
+      |> Enum.sort(&(elem(&1, 1) > elem(&2, 1)))
+      |> Enum.map(&(Tuple.to_list(&1)))
+
+    {:ok, outfile} = File.open("output.csv", [:write, :utf8])
+    try do
+      sorted_list |> CSV.encode |> Enum.each(&IO.write(outfile, &1))
+    after
+      File.close(outfile)
+    end
+
+    :ok
   end
 
   defp glob(folder, mask) do
