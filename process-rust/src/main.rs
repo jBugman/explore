@@ -14,6 +14,7 @@ use std::error::Error;
 
 const OUTPUT_FILE: &'static str = "output.csv";
 
+#[allow(dead_code)]
 fn main() {
 	let args: Vec<String>= env::args().collect();
 
@@ -23,7 +24,10 @@ fn main() {
 
 	let field = &args[1];
 	let folder = &args[2];
+	process(field, folder);
+}
 
+fn process(field: &str, folder: &str) -> bool {
 	let mut frequencies: HashMap<String, i64> = HashMap::new();
 
 	let search_path = format!("{}/*.json", folder);
@@ -53,6 +57,8 @@ fn main() {
 		let result = csv_writer.encode(record);
 		assert!(result.is_ok());
 	};
+
+	true
 }
 
 fn get_string_value(json: &Json, key: &str) -> String {
@@ -71,4 +77,9 @@ fn file_contents(file_path: &str) -> String {
 		Err(why) => panic!("Failed to read {}: {}", file_path, Error::description(&why)),
 		Ok(_) => contents,
 	}
+}
+
+#[test]
+fn it_works() {
+	assert!(process("Name", "../../test_data"));
 }
