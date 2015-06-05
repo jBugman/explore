@@ -8,19 +8,12 @@ use std::fs::File;
 use std::result::Result;
 use std::io::Read;
 use std::collections::HashMap;
-use std::string::as_string;
-
-/***
-
-To much 'unstable' to continue yet=(
-
-***/
+use std::error::Error;
 
 
 // const OUTPUT_FILE: &'static str = "output.csv";
 
 fn main() {
-
 	let args: Vec<String>= env::args().collect();
 
 	if args.len() < 3 {
@@ -30,42 +23,43 @@ fn main() {
 	let field = &args[1];
 	let folder = &args[2];
 
-	let mut frequencies = HashMap::new();
+	let mut frequencies: HashMap<String, i64> = HashMap::new();
 
 	let search_path = format!("{}/*.json", folder);
 	let file_paths = glob(&search_path).unwrap();
 	for path in file_paths.filter_map(Result::ok) {
-
 		let path = path.to_str().unwrap();
+
 		let contents = file_contents(path);
+		let data = Json::from_str(&contents).ok().expect("Malformed JSON");
 
-		let data = Json::from_str(&contents).ok();
-		let data = data.expect("Malformed JSON");
-		// let value = data.find(field).expect("Field is missing");
-		// let key = value.as_string().expect("Field is not a string");
 		let key = get_string_value(&data, field);
-
 		let counter = match frequencies.get(&key) {
 			None => 0,
 			Some(&x) => x,
 		};
 		frequencies.insert(key, counter + 1);
-
-		// let counter = value_option.unwrap_or(0);
-		// frequencies.insert(key, *counter + 1);
 	}
 
+	for (k, v) in frequencies.iter() {
+	    println!("{}: {}", k, v);
+	}
 }
 
 fn get_string_value(json: &Json, key: &str) -> String {
 	let value = json.find(key).expect("Field is missing");
 	let result = value.as_string().expect("Field is not a string");
-	as_string(result)
+	result.to_string()
 }
 
 fn file_contents(file_path: &str) -> String {
-	let mut file = File::open(file_path).ok().expect("Failed to open file");
+	let mut file = match File::open(file_path) {
+		Err(why) => panic!("Failed to open {}: {}", file_path, Error::description(&why)),
+		Ok(file) => file,
+	};
 	let mut contents = String::new();
-	file.read_to_string(&mut contents).ok().expect("Failed to read file");
-	contents
+	match file.read_to_string(&mut contents) {
+		Err(why) => panic!("Failed to read {}: {}", file_path, Error::description(&why)),
+		Ok(_) => contents,
+	}
 }
