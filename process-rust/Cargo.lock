@@ -2,7 +2,22 @@
 name = "process"
 version = "0.1.0"
 dependencies = [
+ "csv 0.14.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "glob 0.2.10 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rustc-serialize 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "byteorder"
+version = "0.3.10"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "csv"
+version = "0.14.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "byteorder 0.3.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 

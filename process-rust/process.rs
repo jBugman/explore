@@ -1,5 +1,6 @@
 extern crate glob;
 extern crate rustc_serialize;
+extern crate csv;
 
 use glob::glob;
 use rustc_serialize::json::Json;
@@ -11,7 +12,7 @@ use std::collections::HashMap;
 use std::error::Error;
 
 
-// const OUTPUT_FILE: &'static str = "output.csv";
+const OUTPUT_FILE: &'static str = "output.csv";
 
 fn main() {
 	let args: Vec<String>= env::args().collect();
@@ -44,8 +45,13 @@ fn main() {
 	let mut sorted_frequencies: Vec<(&String, &i64)> = frequencies.iter().collect();
 	sorted_frequencies.sort_by(|a, b| a.1.cmp(b.1).reverse());
 
-	for x in sorted_frequencies.iter().filter(|&x| x.0 != "") {
-		println!("{:?}", x);
+	let mut csv_writer = match csv::Writer::from_file(OUTPUT_FILE) {
+		Err(why) => panic!("Failed to create CSV writer: {}", Error::description(&why)),
+		Ok(x) => x,
+	};
+	for record in sorted_frequencies.iter().filter(|&x| x.0 != "") {
+		let result = csv_writer.encode(record);
+		assert!(result.is_ok());
 	};
 }
 
