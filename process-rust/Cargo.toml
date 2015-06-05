@@ -3,10 +3,6 @@ name = "process"
 version = "0.1.0"
 authors = ["Sergey Parshukov <sergey.parshukov@me.com>"]
 
-[[bin]]
-name = "process"
-path = "process.rs"
-
 [dependencies]
 glob = "*"
 rustc-serialize = "*"
