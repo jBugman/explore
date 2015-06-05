@@ -41,9 +41,12 @@ fn main() {
 		frequencies.insert(key, counter + 1);
 	}
 
-	for (k, v) in frequencies.iter() {
-	    println!("{}: {}", k, v);
-	}
+	let mut sorted_frequencies: Vec<(&String, &i64)> = frequencies.iter().collect();
+	sorted_frequencies.sort_by(|a, b| a.1.cmp(b.1).reverse());
+
+	for x in sorted_frequencies.iter().filter(|&x| x.0 != "") {
+		println!("{:?}", x);
+	};
 }
 
 fn get_string_value(json: &Json, key: &str) -> String {
