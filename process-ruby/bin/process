@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+require 'bundler/setup'
+require 'process/ruby'
+
+if ARGV.length < 2
+  raise ArgumentError, "Args are: <field name> <folder>"
+end
+
+field, folder = ARGV
+Process.process field, folder

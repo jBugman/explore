@@ -1,11 +1,8 @@
 require 'spec_helper'
 
 describe Process::Ruby do
-  it 'has a version number' do
-    expect(Process::Ruby::VERSION).not_to be nil
-  end
 
   it 'does something useful' do
-    expect(false).to eq(true)
+    expect(Process.process("Name", "../test_data/")).to eq(true)
   end
 end
