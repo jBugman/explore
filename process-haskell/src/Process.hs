@@ -1,27 +1,27 @@
 module Process (process) where
 import Control.Exception (evaluate)
-import Control.Monad (forM_)
 import System.FilePath.Glob
 import Data.Aeson (decode)
 import Data.Aeson.Types
+import Data.Csv as CSV (encode)
 import Data.List (sortBy)
 import Data.Maybe (fromMaybe)
 import Data.Ord (comparing)
 import Data.Text (Text, pack, unpack)
-import Data.ByteString.Lazy as B (ByteString, readFile)
+import Data.ByteString.Lazy as B (ByteString, readFile, writeFile)
 import qualified Data.Map as M (Map, fromListWith, toList)
 
 -- | Do actual processing
 -- >>> process "Name" "../test_data/"
--- "ok" -- broken for now
+--
 process :: String -> String -> IO ()
 process field folder = do
     files <- globDir1 (compile "*.json") folder
     values <- mapM (processFile field) files
     let notEmpty = [x | x <- values, x /= ""]
     let result = sortedFrequencies notEmpty
-    forM_ result $ \(k, v) -> putStrLn (k ++ " " ++ show v)
-    -- print "ok"
+    let csv = CSV.encode result
+    B.writeFile "output.csv" csv
 
 sortedFrequencies :: [String] -> [(String, Int)]
 sortedFrequencies m = sortBy (flip (comparing snd)) freq
