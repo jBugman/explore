@@ -1,15 +1,15 @@
 module Process (process) where
 import Control.Exception (evaluate)
-import System.FilePath.Glob
 import Data.Aeson (decode)
 import Data.Aeson.Types
-import Data.Csv as CSV (encode)
+import qualified Data.ByteString.Lazy as B (ByteString, readFile, writeFile)
+import qualified Data.Csv as CSV (encode)
 import Data.List (sortBy)
+import qualified Data.Map as M (Map, fromListWith, toList)
 import Data.Maybe (fromMaybe)
 import Data.Ord (comparing)
 import Data.Text (Text, pack, unpack)
-import Data.ByteString.Lazy as B (ByteString, readFile, writeFile)
-import qualified Data.Map as M (Map, fromListWith, toList)
+import System.FilePath.Glob
 
 -- | Do actual processing
 -- >>> process "Name" "../test_data/"
@@ -37,7 +37,7 @@ processFile field filename = do
     let value = getFieldValue json field
     evaluate value
 
-parseJson :: ByteString -> Object
+parseJson :: B.ByteString -> Object
 parseJson src = fromMaybe (error "Malformed JSON") (decode src :: Maybe Object)
 
 getFieldValue :: Object -> String -> String
