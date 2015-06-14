@@ -1,9 +1,11 @@
 module Process (process) where
-import Control.Exception (evaluate, throw)
+import Control.Exception (evaluate)
+import Control.Monad (forM_)
 import System.FilePath.Glob
 import Data.Aeson (decode)
 import Data.Aeson.Types
 import Data.List (sortBy)
+import Data.Maybe (fromMaybe)
 import Data.Ord (comparing)
 import Data.Text (Text, pack, unpack)
 import Data.ByteString.Lazy as B (ByteString, readFile)
@@ -11,18 +13,18 @@ import qualified Data.Map as M (Map, fromListWith, toList)
 
 -- | Do actual processing
 -- >>> process "Name" "../test_data/"
--- "ok"
+-- "ok" -- broken for now
 process :: String -> String -> IO ()
 process field folder = do
     files <- globDir1 (compile "*.json") folder
     values <- mapM (processFile field) files
     let notEmpty = [x | x <- values, x /= ""]
     let result = sortedFrequencies notEmpty
-    -- flip mapM_ result $ \(k, v) -> putStrLn (k ++ " " ++ show v)
-    print "ok"
+    forM_ result $ \(k, v) -> putStrLn (k ++ " " ++ show v)
+    -- print "ok"
 
 sortedFrequencies :: [String] -> [(String, Int)]
-sortedFrequencies m = reverse $ sortBy (comparing snd) freq
+sortedFrequencies m = sortBy (flip (comparing snd)) freq
   where freq = M.toList $ frequencies m
 
 frequencies :: [String] -> M.Map String Int
@@ -36,14 +38,12 @@ processFile field filename = do
     evaluate value
 
 parseJson :: ByteString -> Object
-parseJson src = case (decode src :: Maybe Object) of
-    Just v  -> v
-    Nothing -> error "Malformed JSON"
+parseJson src = fromMaybe (error "Malformed JSON") (decode src :: Maybe Object)
 
 getFieldValue :: Object -> String -> String
 getFieldValue json field =
     case parse f json of
-        Error e          -> error "Field is not a string"
+        Error _          -> error "Field is not a string"
         Success Nothing  -> error "Field is missing"
         Success (Just x) -> unpack x
       where f obj = obj .:? pack field :: Parser (Maybe Text)
