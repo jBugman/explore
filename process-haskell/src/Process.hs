@@ -1,5 +1,5 @@
-{-# LANGUAGE BangPatterns #-}
 module Process (process) where
+import Control.Exception (evaluate)
 import System.FilePath.Glob
 import Data.Aeson (decode)
 import Data.Aeson.Types
@@ -18,9 +18,9 @@ process field folder = do
 process' :: String -> String -> IO String
 process' field filename = do
     contents <- B.readFile filename
-    let !json = parseJson contents
+    let json = parseJson contents
     let value = getFieldValue json field
-    return value
+    evaluate value
 
 parseJson :: ByteString -> Object
 parseJson src = case (decode src :: Maybe Object) of
