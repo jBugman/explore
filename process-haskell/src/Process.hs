@@ -3,21 +3,30 @@ import Control.Exception (evaluate, throw)
 import System.FilePath.Glob
 import Data.Aeson (decode)
 import Data.Aeson.Types
-import Data.Text (pack, unpack, Text)
-import Data.ByteString.Lazy as B (readFile, ByteString)
--- import Data.HashMap as M (lookup, Map)
+import Data.List (sortBy)
+import Data.Ord (comparing)
+import Data.Text (Text, pack, unpack)
+import Data.ByteString.Lazy as B (ByteString, readFile)
+import qualified Data.Map as M (Map, fromListWith, toList)
 
 -- | Do actual processing
 -- >>> process "Name" "../test_data/"
 -- "ok"
 process :: String -> String -> IO ()
 process field folder = do
-    -- putStrLn ("Processing field '" ++ field ++ "' in " ++ folder)
     files <- globDir1 (compile "*.json") folder
     values <- mapM (processFile field) files
     let notEmpty = [x | x <- values, x /= ""]
-    -- mapM_ putStrLn $ notEmpty
+    let result = sortedFrequencies notEmpty
+    -- flip mapM_ result $ \(k, v) -> putStrLn (k ++ " " ++ show v)
     print "ok"
+
+sortedFrequencies :: [String] -> [(String, Int)]
+sortedFrequencies m = reverse $ sortBy (comparing snd) freq
+  where freq = M.toList $ frequencies m
+
+frequencies :: [String] -> M.Map String Int
+frequencies items = M.fromListWith (+) (map (\i -> (i, 1)) items)
 
 processFile :: String -> String -> IO String
 processFile field filename = do
