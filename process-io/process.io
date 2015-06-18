@@ -35,6 +35,7 @@ process := method(field, folder,
 	outfile := File with("output.csv") open
 	sorted foreach(line, outfile write(line asCSV, "\n"))
 	outfile close
+	return true
 )
 
 main(System args)
