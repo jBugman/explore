@@ -9,3 +9,4 @@ Should take folder and field as parameters. Then scan all JSON files in that fol
 	[ ] Clojure
 	[ ] Erlang
 	[ ] Lua
+	[✓] Io
