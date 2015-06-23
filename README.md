@@ -11,4 +11,4 @@ Should take folder and field as parameters. Then scan all JSON files in that fol
 	[ ] Lua
 	[✓] Io
 	[✓] Scala
-	[ ] Python3
+	[✓] Python3
