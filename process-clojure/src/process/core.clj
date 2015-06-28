@@ -17,12 +17,15 @@
     (complement string?) (exit "Field is not a string")
     :else value))
 
+(defn parse-json-file [file] (-> file slurp json/parse-string))
+
 (defn process [field folder]
-  (def files (glob (io/file folder) "*.json"))
-  (def contents (map #(json/parse-string (slurp %)) files))
-  (def values (map (comp check-field #(get % field)) contents))
-  (def stats (sort-by val > (frequencies (remove empty? values))))
-  (csv "output.csv" stats))
+  (->>  (glob (io/file folder) "*.json")
+        (map (comp check-field #(get % field) parse-json-file))
+        (remove empty?)
+        frequencies
+        (sort-by val >)
+        (csv "output.csv")))
 
 (defn -main [& args]
   (if (= 2 (count args))
