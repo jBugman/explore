@@ -10,18 +10,16 @@ process(Field, Folder) ->
     Values = lists:filtermap(fun(F) ->
         {ok, Binary} = file:read_file(F),
         Json = jsx:decode(Binary, [return_maps]),
-        case maps:find(list_to_binary(Field), Json) of
-            {ok, Value} -> case is_binary(Value) of
-                true -> case binary_to_list(Value) of
-                    "" -> false;
-                    X -> {true, X}
-                end;
-                false -> erlang:error("Field is not a string")
-            end;
+        Key = list_to_binary(Field),
+        case maps:find(Key, Json) of
+            {ok, <<>>} -> false;
+            {ok, X} when is_binary(X) -> {true, binary_to_list(X)};  % Return non-empty string
+            {ok, _} -> erlang:error("Field is not a string");
             error -> erlang:error("Field is missing")
         end
     end, Files),
     Frequencies = lists:reverse(lists:keysort(2, count_items(Values))),
+
     {ok, CsvFile} = file:open("output.csv", [write]),
     lists:foreach(fun({K, V}) -> csv_gen:row(CsvFile, [K, V]) end, Frequencies),
     file:close(CsvFile).

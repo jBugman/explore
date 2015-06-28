@@ -7,7 +7,7 @@ Should take folder and field as parameters. Then scan all JSON files in that fol
 	[✓] Ruby
 	[ ] OCaml
 	[ ] Clojure
-	[ ] Erlang
+	[✓] Erlang
 	[ ] Lua
 	[✓] Io
 	[✓] Scala
