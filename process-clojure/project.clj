@@ -6,4 +6,5 @@
     [org.clojure/data.csv "0.1.2"]]
   :main ^:skip-aot process.core
   :target-path "target/%s"
-  :profiles {:uberjar {:aot :all}})
+  :profiles {:uberjar {:aot :all}}
+  :plugins [[lein-kibit "0.1.2"]])
