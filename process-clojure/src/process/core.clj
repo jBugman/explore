@@ -11,16 +11,16 @@
   (with-open [f (io/writer filename)]
     (csv/write-csv f data)))
 
+(defn check-field [value]
+  (cond #(%1 %2) value
+    nil? (exit "Field is missing")
+    (complement string?) (exit "Field is not a string")
+    :else value))
+
 (defn process [field folder]
   (def files (glob (io/file folder) "*.json"))
   (def contents (map #(json/parse-string (slurp %)) files))
-  (def values (map
-    (fn [data]
-      (def value (get data field))
-      (case value
-        nil (exit "Field is missing")
-        (if (string? value) value (exit "Field is not a string"))))
-    contents))
+  (def values (map (comp check-field #(get % field)) contents))
   (def stats (sort-by val > (frequencies (remove empty? values))))
   (csv "output.csv" stats))
 
