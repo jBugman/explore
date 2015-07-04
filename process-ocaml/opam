@@ -1,0 +1,8 @@
+opam-version: "1.2"
+name: "process-ocaml"
+version: "0.0.1"
+remove: ["ocamlfind" "remove" "process-ocaml"]
+depends: [
+  "yojson" {build}
+  "ocamlfind" {build}
+]
