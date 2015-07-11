@@ -22,9 +22,21 @@ char* read_file(char const *filename) {
   return buffer;
 }
 
+static void free_hash_table_entry(gpointer key, gpointer value, gpointer user_data) {
+  g_free(key);
+}
+
+// g_hash_table_foreach(x, free_hash_table_entry, NULL); \
+
+#define FREE_HASHTABLE(x) { \
+  g_hash_table_foreach(x, free_hash_table_entry, NULL); \
+  g_hash_table_destroy(x); \
+}
+
 #define CLEANUP_END_EXIT() { \
   globfree(&glob_result); \
   yajl_tree_free(node); \
+  FREE_HASHTABLE(frequencies); \
   exit(EXIT_FAILURE); \
 }
 
@@ -33,6 +45,7 @@ void process(char const *field, char const *folder) {
   gchar* search_path = g_build_path(G_DIR_SEPARATOR_S, folder, "*.json", NULL);
   glob(search_path, GLOB_TILDE, NULL, &glob_result);
   g_free(search_path);
+  GHashTable *frequencies = g_hash_table_new(g_str_hash, g_str_equal);
   for(unsigned int i=0; i < glob_result.gl_pathc; ++i) {
     char* path = glob_result.gl_pathv[i];
     char* json_string = read_file(path);
@@ -43,18 +56,25 @@ void process(char const *field, char const *folder) {
       CLEANUP_END_EXIT()
     }
     const char *json_path[] = {field, NULL};
-    yajl_val value = yajl_tree_get(node, json_path, yajl_t_any);
-    if (value) {
-      if (!YAJL_GET_STRING(value)) {
+    yajl_val field_value = yajl_tree_get(node, json_path, yajl_t_any);
+    if (field_value) {
+      if (!YAJL_GET_STRING(field_value)) {
         fprintf(stderr, "Field is not a string\n");
         CLEANUP_END_EXIT()
       }
-      char const* string_value = YAJL_GET_STRING(value);
-      if (string_value[0] != '\0') {
-        puts(string_value);
+      char const* key_string = YAJL_GET_STRING(field_value);
+      if (key_string[0] != '\0') {
+        gpointer ok, ov = NULL;
+        gint value = 1;
+        gpointer key = g_strdup(key_string);
+        if (g_hash_table_lookup_extended(frequencies, key, &ok, &ov)) {
+            value = GPOINTER_TO_INT(ov) + 1;
+            g_hash_table_insert(frequencies, ok, GINT_TO_POINTER(value));
+            g_free(key);
+        } else {
+          g_hash_table_insert(frequencies, key, GINT_TO_POINTER(value));
+        }
       }
-      // printf("%s\n", (string_value[0] == '\0') ? "false" : "true");
-      // puts(string_value);
     } else {
       fprintf(stderr, "Field is missing\n");
       CLEANUP_END_EXIT()
@@ -62,6 +82,14 @@ void process(char const *field, char const *folder) {
     yajl_tree_free(node);
   }
   globfree(&glob_result);
+
+  GHashTableIter iter;
+  gpointer key, value;
+  g_hash_table_iter_init(&iter, frequencies);
+  while (g_hash_table_iter_next(&iter, &key, &value)) {
+    printf("%s  %d\n", (char*)key, GPOINTER_TO_INT(value));
+  }
+  FREE_HASHTABLE(frequencies)
 }
 
 int main (int argc, char const *argv[]) {
