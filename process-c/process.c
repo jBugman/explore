@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
+#include <errno.h>
 #include <glob.h>
 #include <glib.h>
 #include "yajl/yajl_tree.h"
+#include "csv.h" // libcsv
 
 char* read_file(char const *filename) {
   FILE *f = fopen(filename, "rb");
@@ -107,15 +109,32 @@ void process(char const *field, char const *folder) {
     sorted[i] = (Frequency){ (char*)key, GPOINTER_TO_INT(value) };
   }
   qsort(sorted, size, sizeof(Frequency), frequency_comparator);
-  for(guint i = 0; i < size; i++) {
-    printf("%s %d\n", sorted[i].key, sorted[i].count);
+
+  FILE *outfile = fopen("output.csv", "wb");
+  if (outfile == NULL) {
+      fprintf(stderr, "Failed to open output file: %s\n", strerror(errno));
+      FREE_HASHTABLE(frequencies)
+      exit(EXIT_FAILURE);
+  } else {
+    for(guint i = 0; i < size; i++) {
+      int err = csv_fwrite(outfile, sorted[i].key, strlen(sorted[i].key));
+      if (err != 0) {
+        fprintf(stderr, "Error while writing to CSV file\n");
+        FREE_HASHTABLE(frequencies)
+        fclose(outfile);
+        exit(EXIT_FAILURE);
+      }
+      fprintf(outfile, ",%d\n", sorted[i].count);;
+    }
+    fclose(outfile);
   }
+
   FREE_HASHTABLE(frequencies)
 }
 
 int main (int argc, char const *argv[]) {
   if (argc < 3) {
-    puts("Args are: <field name> <folder>");
+    fputs("Args are: <field name> <folder>\n", stderr);
     return 1;
   }
   process(argv[1], argv[2]);
