@@ -1,6 +1,7 @@
-#include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <dirent.h>
 #include <glob.h>
 #include <glib.h>
 #include "yajl/yajl_tree.h"
@@ -26,7 +27,21 @@ static void free_hash_table_entry(gpointer key, gpointer value, gpointer user_da
   g_free(key);
 }
 
-// g_hash_table_foreach(x, free_hash_table_entry, NULL); \
+typedef struct {
+  gchar* key;
+  guint count;
+} Frequency;
+
+int frequency_comparator(const void *v1, const void *v2) {
+  const Frequency *a = (Frequency *)v1;
+  const Frequency *b = (Frequency *)v2;
+  if (a->count > b->count)
+    return -1;
+  else if (a->count < b->count)
+    return +1;
+  else
+    return strcmp(a->key, b->key);
+}
 
 #define FREE_HASHTABLE(x) { \
   g_hash_table_foreach(x, free_hash_table_entry, NULL); \
@@ -83,11 +98,17 @@ void process(char const *field, char const *folder) {
   }
   globfree(&glob_result);
 
+  guint size = g_hash_table_size(frequencies);
+  Frequency sorted[size];
   GHashTableIter iter;
   gpointer key, value;
   g_hash_table_iter_init(&iter, frequencies);
-  while (g_hash_table_iter_next(&iter, &key, &value)) {
-    printf("%s  %d\n", (char*)key, GPOINTER_TO_INT(value));
+  for(guint i = 0; g_hash_table_iter_next(&iter, &key, &value); i++) {
+    sorted[i] = (Frequency){ (char*)key, GPOINTER_TO_INT(value) };
+  }
+  qsort(sorted, size, sizeof(Frequency), frequency_comparator);
+  for(guint i = 0; i < size; i++) {
+    printf("%s %d\n", sorted[i].key, sorted[i].count);
   }
   FREE_HASHTABLE(frequencies)
 }
