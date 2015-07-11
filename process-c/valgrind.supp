@@ -1,0 +1,39 @@
+# Leaks in Yajl parser
+{
+   Addr1
+   Memcheck:Addr1
+   ...
+   fun:yajl_tree_parse
+}
+
+# No Objective-C code in project but many related false positives
+{
+   +[NSObject new]
+   Memcheck:Leak
+   ...
+   fun:+[NSObject new]
+}
+{
+   _NSInitializePlatform
+   Memcheck:Leak
+	 ...
+   fun:_NSInitializePlatform
+}
+{
+   _objc_rootAlloc
+   Memcheck:Leak
+   ...
+   fun:_objc_rootAlloc
+}
+{
+   __CFInitialize
+   Memcheck:Leak
+	 ...
+   fun:__CFInitialize
+}
+{
+   objc_msgSend
+   Memcheck:Leak
+	 ...
+   fun:objc_msgSend
+}
