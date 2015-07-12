@@ -4,9 +4,11 @@ all: build run
 LIBCSV_BASE = /usr/local/Cellar/libcsv/3.0.3
 LIBCSV_FLAGS = -I$(LIBCSV_BASE)/include -L$(LIBCSV_BASE)/lib -lcsv
 
+CFLAGS = `pkg-config --libs yajl` `pkg-config --cflags --libs glib-2.0` $(LIBCSV_FLAGS) -Wall
+
 build: clean
 	@mkdir -p build
-	clang `pkg-config --libs yajl` `pkg-config --cflags --libs glib-2.0` $(LIBCSV_FLAGS) -Wall -o build/process process.c
+	clang $(CFLAGS) -o build/process process.c main.c
 
 clean:
 	@rm -rf build
@@ -16,3 +18,10 @@ run: build
 
 memcheck: build
 	valgrind --gen-suppressions=all --leak-check=full --show-leak-kinds=all --show-reachable=no --show-possibly-lost=no --dsymutil=yes --suppressions=valgrind.supp build/process Name ../test_data/
+
+test:
+	@mkdir -p build
+	checkmk test.check > build/test.c
+	clang $(CFLAGS) `pkg-config --libs check` -o build/test process.c build/test.c
+	@echo
+	@build/test
