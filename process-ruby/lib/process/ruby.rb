@@ -1,5 +1,5 @@
 require "process/ruby/version"
-require "json"
+require "oj"
 require "csv"
 
 module Process
@@ -11,7 +11,7 @@ module Process
 
     Dir.glob(folder + "*.json") do |filename|
       file = IO.read(filename)
-      data = JSON.parse(file)
+      data = Oj.load(file)
       if not data.has_key?(field) then raise KeyError, "Field is missing" end
       value = data[field]
       if not value.is_a? String then raise TypeError, "Field is not a string" end
