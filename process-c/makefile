@@ -8,7 +8,7 @@ CFLAGS = `pkg-config --libs yajl` `pkg-config --cflags --libs glib-2.0` $(LIBCSV
 
 build: clean
 	@mkdir -p build
-	clang $(CFLAGS) -o build/process process.c main.c
+	clang $(CFLAGS) -O2 -o build/process process.c main.c
 
 clean:
 	@rm -rf build
