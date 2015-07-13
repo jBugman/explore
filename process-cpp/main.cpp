@@ -49,7 +49,7 @@ void processFolder(const std::string& pat, const std::string& key){
     //sort by value
     // copy into vector
     auto compareByValue = [](pair<string, int> v1, pair<string, int>v2) {
-        return v1.second <= v2.second;
+        return v1.second >= v2.second;
     };
     
     set<pair<string, int>, decltype(compareByValue)> kvs(frequencies.cbegin(), frequencies.cend(), compareByValue);
@@ -61,6 +61,11 @@ void processFolder(const std::string& pat, const std::string& key){
 }
 
 int main(int argc, const char * argv[]) {
-    processFolder(string(argv[2])+"/*.json", argv[1]);
+    if (argc > 2) {
+        processFolder(string(argv[2])+"/*.json", argv[1]);    
+    } else {
+        cerr << "Args are: <field name> <folder>\n";
+    }
+    
     return 0;
 }

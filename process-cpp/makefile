@@ -1,11 +1,11 @@
 all: build run
 
 # MAC OS X only. Homebrewed libcsv does nt provide pkg-config info.
-CFLAGS = -std=c++1y -I./json/ -Wall
+CFLAGS = -std=c++11 -I./json/ -Wall
 
 build: clean
 	@mkdir -p build
-	clang++ $(CFLAGS) -O2 -o build/process main.cpp jsoncpp.cpp 
+	clang++ $(CFLAGS) -O3 -o build/process main.cpp jsoncpp.cpp 
 
 clean:
 	@rm -rf build
