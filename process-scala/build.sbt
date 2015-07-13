@@ -10,3 +10,6 @@ libraryDependencies ++= Seq(
 
   "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test"
 )
+
+mainClass       in assembly := Some("Process")
+assemblyJarName in assembly := "process.jar"
