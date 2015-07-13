@@ -55,7 +55,7 @@ void processFolder(const std::string& pat, const std::string& key){
     set<pair<string, int>, decltype(compareByValue)> kvs(frequencies.cbegin(), frequencies.cend(), compareByValue);
     
     ofstream output("output.csv");
-    for (auto& kv : kvs) {
+    for (const auto& kv : kvs) {
         output << "\"" << replaceAll(kv.first, "\"", "\"\"") << "\","<< kv.second << endl;
     }
 }
