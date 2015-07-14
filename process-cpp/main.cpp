@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <set>
 #include <glob.h>
-#include "json.h"
+#include "json/json.h"
 
 using namespace std;
 
@@ -22,15 +22,15 @@ void processFolder(const std::string& pat, const std::string& key){
     using namespace std;
     glob_t glob_result;
     glob(pat.c_str(),GLOB_TILDE,NULL,&glob_result);
-    
+
     unordered_map<string, unsigned int> frequencies;
-    
+
     for(unsigned int i=0;i<glob_result.gl_pathc;++i){
         ifstream fileInput{glob_result.gl_pathv[i]};
         Json::Value root;
-        
+
         fileInput >> root;
-        
+
         if (!root.isMember(key)) {
             cerr << "Field is missing" << endl;
             exit(-1);
@@ -51,9 +51,9 @@ void processFolder(const std::string& pat, const std::string& key){
     auto compareByValue = [](pair<string, int> v1, pair<string, int>v2) {
         return v1.second >= v2.second;
     };
-    
+
     set<pair<string, int>, decltype(compareByValue)> kvs(frequencies.cbegin(), frequencies.cend(), compareByValue);
-    
+
     ofstream output("output.csv");
     for (const auto& kv : kvs) {
         output << "\"" << replaceAll(kv.first, "\"", "\"\"") << "\","<< kv.second << endl;
@@ -62,10 +62,10 @@ void processFolder(const std::string& pat, const std::string& key){
 
 int main(int argc, const char * argv[]) {
     if (argc > 2) {
-        processFolder(string(argv[2])+"/*.json", argv[1]);    
+        processFolder(string(argv[2])+"/*.json", argv[1]);
     } else {
         cerr << "Args are: <field name> <folder>\n";
     }
-    
+
     return 0;
 }
