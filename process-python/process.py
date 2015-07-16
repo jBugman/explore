@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from collections import defaultdict
+from collections import Counter
 import csv
 import json
 import sys
@@ -8,8 +8,7 @@ import os.path
 
 
 def process(field, folder):
-    frequencies = defaultdict(lambda: 0)
-
+    frequencies = Counter()
     files = (f for f in os.listdir(folder) if f.endswith('.json'))
     for file in files:
         with open(os.path.join(folder, file), encoding='utf-8') as jsonfile:
@@ -24,10 +23,9 @@ def process(field, folder):
             if value != '':
                 frequencies[value] += 1
 
-    frequencies = sorted(frequencies.items(), key=lambda kv: kv[1], reverse=True)
     with open('output.csv', 'w', encoding='utf-8') as csvfile:
         csvwriter = csv.writer(csvfile)
-        for item in frequencies:
+        for item in frequencies.most_common():
             csvwriter.writerow(item)
 
 
