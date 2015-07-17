@@ -9,7 +9,7 @@ import os.path
 
 def process(field, folder):
     frequencies = Counter()
-    files = (f for f in os.listdir(folder) if f.endswith('.json'))
+    files = [f for f in os.listdir(folder) if f.endswith('.json')]
     for file in files:
         with open(os.path.join(folder, file), encoding='utf-8') as jsonfile:
             json_data = json.load(jsonfile)
