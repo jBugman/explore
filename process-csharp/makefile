@@ -16,3 +16,8 @@ deps:
 build:
 	@mkdir -p build
 	mcs -lib:$(JSON_PATH) -reference:$(JSON_NAME) -out:build/process.exe process.cs
+
+test:
+	@mkdir -p build
+	mcs -t:library -lib:$(JSON_PATH) -r:$(JSON_NAME) -r:nunit.framework -out:build/process_test.dll process.cs process_test.cs
+	MONO_PATH=$(JSON_PATH) nunit-console build/process_test.dll -xml=/dev/null
