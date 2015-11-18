@@ -4,6 +4,7 @@ Should take folder and field as parameters. Then scan all JSON files in that fol
 	[✓] C#
 	[✓] C++
 	[✓] Clojure
+	[ ] D
 	[✓] Elixir
 	[✓] Erlang
 	[ ] F#
@@ -13,14 +14,15 @@ Should take folder and field as parameters. Then scan all JSON files in that fol
 	[✓] Hy
 	[ ] Idris
 	[✓] Io
-	[ ] Java
+	[✓] Java
+	[ ] Javascript (NodeJS)
 	[ ] Kotlin
 	[✓] Lua
 	[ ] Nim
 	[✓] Objective-C
 	[✓] OCaml
-	[ ] Perl 6
-	[✓] Python3
+	[ ] Perl
+	[✓] Python
 	[✓] Ruby
 	[✓] Rust
 	[✓] Scala
