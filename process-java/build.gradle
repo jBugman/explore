@@ -1,0 +1,16 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'me.bugman.process.Main'
+
+jar {
+    exclude '.DS_Store'
+    baseName 'process'
+	manifest {
+		attributes 'Main-Class': mainClassName
+	}
+}
+
+repositories {
+    mavenCentral()
+}
