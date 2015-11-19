@@ -4,7 +4,7 @@
         [json [load :as json-load]]
         [os]
         [os.path [join :as path-join]]
-        [sys [exit]])
+        [sys [argv exit]])
 
 (defn parse-json-file [file]
   (with [[f (open file :encoding "utf-8")]] (json-load f)))
@@ -26,7 +26,7 @@
       (with [[f (open "output.csv" "w" :encoding "utf-8")]]
         (let [[writer (csv-writer f)]] (for [item sorted-freq] (.writerow writer item)))))))
 
-(defmain [&rest args]
-  (if (< (len args) 3)
+(defmain []
+  (if (< (len argv) 3)
     (print "Args are: <field name> <folder>")
-    (process (get args 1) (get args 2))))
+    (process (get argv 1) (get argv 2))))
