@@ -27,6 +27,5 @@
         (let [[writer (csv-writer f)]] (for [item sorted-freq] (.writerow writer item)))))))
 
 (defmain []
-  (if (< (len argv) 3)
-    (print "Args are: <field name> <folder>")
-    (process (get argv 1) (get argv 2))))
+  (for [i (range 100)]
+    (process "Name" "../test_data/")))
