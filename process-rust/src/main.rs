@@ -4,7 +4,6 @@ extern crate csv;
 
 use glob::glob;
 use rustc_serialize::json::Json;
-use std::env;
 use std::fs::File;
 use std::result::Result;
 use std::io::Read;
@@ -16,15 +15,9 @@ const OUTPUT_FILE: &'static str = "output.csv";
 
 #[allow(dead_code)]
 fn main() {
-	let args: Vec<String>= env::args().collect();
-
-	if args.len() < 3 {
-		panic!("Args are: <field name> <folder>");
+	for _ in 0..100 {
+		process("Name", "../test_data/");
 	}
-
-	let field = &args[1];
-	let folder = &args[2];
-	process(field, folder);
 }
 
 fn process(field: &str, folder: &str) -> bool {

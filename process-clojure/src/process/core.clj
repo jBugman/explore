@@ -28,6 +28,5 @@
         (csv "output.csv")))
 
 (defn -main [& args]
-  (if (= 2 (count args))
-    (process (first args) (second args))
-    (println "Args are: <field name> <folder>")))
+  (dotimes [_ 100]
+    (process "Name" "../test_data/")))
