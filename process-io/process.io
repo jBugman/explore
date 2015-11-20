@@ -2,7 +2,15 @@
 Yajl
 
 main := method(args,
-    for(_, 1, 100, (process("Name", "../test_data/"))))
+	if(args size < 3,
+		"Args are: <field name> <folder>" println
+	,
+		process(args at(1), args at(2))
+	))
+
+# Benchmark
+# main := method(args,
+#     for(_, 1, 100, (process("Name", "../test_data/"))))
 
 List asCSV := method(map(x,
 	x = x asString asMutable replaceSeq("\"", "\"\"")

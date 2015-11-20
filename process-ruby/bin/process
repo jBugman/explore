@@ -2,6 +2,14 @@
 require 'bundler/setup'
 require 'process/ruby'
 
-for i in 1..100
-  Process.process "Name", "../test_data/"
+if ARGV.length < 2
+  raise ArgumentError, "Args are: <field name> <folder>"
 end
+
+field, folder = ARGV
+Process.process field, folder
+
+# Benchmark
+# for i in 1..100
+#   Process.process "Name", "../test_data/"
+# end

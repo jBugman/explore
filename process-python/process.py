@@ -30,5 +30,12 @@ def process(field, folder):
 
 
 if __name__ == '__main__':
-    for i in range(100):
-        process("Name", "../test_data/")
+    if len(sys.argv) < 3:
+        print('Args are: <field name> <folder>')
+    else:
+        process(sys.argv[1], sys.argv[2])
+
+# Benchmark
+# if __name__ == '__main__':
+#     for i in range(100):
+#         process("Name", "../test_data/")

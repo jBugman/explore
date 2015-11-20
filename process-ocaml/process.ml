@@ -35,6 +35,12 @@ let process field folder =
     Out_channel.close outfile
 
 let () =
+  match Sys.argv with
+  | [|_; field; folder|] -> process field folder
+  | _ -> print_string "Args are: <field name> <folder>\n"
+
+(* Benchmark *)
+(* let () =
   for _ = 1 to 100 do
     process "Name" "../test_data/"
-  done
+  done *)
