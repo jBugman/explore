@@ -31,7 +31,7 @@
     (print "Args are: <field name> <folder>")
     (process (get argv 1) (get argv 2))))
 
-; Benchmark
+; ; Benchmark
 ; (defmain []
 ;   (for [i (range 100)]
 ;     (process "Name" "../test_data/")))

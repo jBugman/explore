@@ -8,7 +8,7 @@ main := method(args,
 		process(args at(1), args at(2))
 	))
 
-# Benchmark
+# # Benchmark
 # main := method(args,
 #     for(_, 1, 100, (process("Name", "../test_data/"))))
 

@@ -35,7 +35,7 @@ if __name__ == '__main__':
     else:
         process(sys.argv[1], sys.argv[2])
 
-# Benchmark
+# # Benchmark
 # if __name__ == '__main__':
 #     for i in range(100):
 #         process("Name", "../test_data/")

@@ -14,7 +14,7 @@ int main(int argc, const char * argv[]) {
     }
 }
 
-// Benchmark
+// // Benchmark
 // int main(int argc, const char * argv[]) {
 //     for(int i = 0; i < 100; i++) {
 //         process("Name", "../test_data/");

@@ -27,7 +27,7 @@ fn main() {
 	process(field, folder);
 }
 
-// Benchmark
+// // Benchmark
 // fn main() {
 // 	for _ in 0..100 {
 // 		process("Name", "../test_data/");

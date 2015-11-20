@@ -9,7 +9,13 @@ import scala.io.Source
 
 object Process {
 
-  def main(args: Array[String]): Unit = for (_ <- 1 to 100) { process("Name", "../test_data/") }
+  def main(args: Array[String]): Unit = args.toList match {
+    case field :: folder :: Nil => process(field, folder)
+    case _ => println("Args are: <field name> <folder>")
+  }
+
+  // // Benchmark
+  // def main(args: Array[String]): Unit = for (_ <- 1 to 100) { process("Name", "../test_data/") }
 
   def process(field: String, folder: String): String = {
     val frequencies = mutable.Map.empty[String, Int]
