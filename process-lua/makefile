@@ -5,7 +5,7 @@ install:
 	luarocks-5.1 install busted
 
 run:
-	lua main.lua Name ../test_data/
+	lua-5.1 main.lua Name ../test_data/
 
 test:
 	busted process_test.lua

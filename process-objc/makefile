@@ -15,7 +15,7 @@ clean:
 	@rm -rf build
 
 run: build
-	@build/process Name ../test_data/
+	build/process Name ../test_data/
 
 test:
 	xcodebuild test -project Process.xcodeproj -scheme Process

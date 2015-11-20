@@ -31,3 +31,8 @@
   (if (= 2 (count args))
     (process (first args) (second args))
     (println "Args are: <field name> <folder>")))
+
+; ; Benchmark
+; (defn -main [& args]
+;   (dotimes [_ 100]
+;     (process "Name" "../test_data/")))

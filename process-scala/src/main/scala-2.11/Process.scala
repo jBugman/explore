@@ -14,6 +14,9 @@ object Process {
     case _ => println("Args are: <field name> <folder>")
   }
 
+  // // Benchmark
+  // def main(args: Array[String]): Unit = for (_ <- 1 to 100) { process("Name", "../test_data/") }
+
   def process(field: String, folder: String): String = {
     val frequencies = mutable.Map.empty[String, Int]
 

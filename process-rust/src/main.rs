@@ -27,6 +27,13 @@ fn main() {
 	process(field, folder);
 }
 
+// // Benchmark
+// fn main() {
+// 	for _ in 0..100 {
+// 		process("Name", "../test_data/");
+// 	}
+// }
+
 fn process(field: &str, folder: &str) -> bool {
 	let mut frequencies: HashMap<String, i64> = HashMap::new();
 

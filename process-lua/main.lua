@@ -6,3 +6,8 @@ if #arg == 2 then
 else
   print("Args are: <field name> <folder>")
 end
+
+-- -- Benchmark
+-- for i=1, 100 do
+--   process("Name", "../test_data/")
+-- end

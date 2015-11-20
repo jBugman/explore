@@ -13,3 +13,11 @@ int main(int argc, const char * argv[]) {
         return EXIT_FAILURE;
     }
 }
+
+// // Benchmark
+// int main(int argc, const char * argv[]) {
+//     for(int i = 0; i < 100; i++) {
+//         process("Name", "../test_data/");
+//     }
+//     return EXIT_SUCCESS;
+// }

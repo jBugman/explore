@@ -5,6 +5,11 @@
 main([Field, Folder]) -> process(Field, Folder);
 main(_) -> io:format("Args are: <field name> <folder>~n", []), halt(1).
 
+% % Benchmark
+% main(_) -> main_rec(100).
+% main_rec(0) -> done;
+% main_rec(N) -> process("Name", "../test_data/"), main_rec(N - 1).
+
 process(Field, Folder) ->
     Files = filelib:wildcard(Folder ++ "*.json"),
     Values = lists:filtermap(fun(F) ->
