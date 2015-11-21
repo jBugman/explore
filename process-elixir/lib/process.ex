@@ -3,12 +3,18 @@ require Poison
 require CSV
 
 defmodule Process.CLI do
+
   def main(args) do
     case args do
       [field, folder] -> process(field, folder)
       _ -> Logger.error "Args are: <field name> <folder>"
     end
   end
+
+  # # Benchmark
+  # def main(_) do main_rec(100) end
+  # def main_rec(0) do :done end
+  # def main_rec(n) do process("Name", "../test_data/") end
 
   def process(field, folder) do
     values = for file <- glob(folder, ".json"),
