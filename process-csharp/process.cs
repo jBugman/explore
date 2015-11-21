@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using CsvHelper;
 
 public class ProcessCsharp {
 
@@ -35,8 +36,10 @@ public class ProcessCsharp {
             }
         }
         var sorted = from pair in frequencies orderby pair.Value descending select pair;
-        foreach (KeyValuePair<String, int> pair in sorted) {
-            Console.WriteLine("{0}: {1}", pair.Key, pair.Value);
+        using (var file = new StreamWriter("output.csv")) {
+            var csv = new CsvWriter(file);
+            csv.Configuration.HasHeaderRecord = false;
+            csv.WriteRecords(sorted);
         }
         return SUCCESS;
     }
@@ -50,4 +53,11 @@ public class ProcessCsharp {
             System.Environment.Exit(exitCode);
         }
     }
+
+    // // Benchmark
+    // static public void Main(String[] args) {
+    //     for(int i = 0; i < 100; i++) {
+    //         Process("Name", "../test_data/");
+    //     }
+    // }
 }
