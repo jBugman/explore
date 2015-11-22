@@ -1,21 +1,16 @@
-all: run
+.PHONY: build
 
 CFLAGS = -std=c++11 `pkg-config --cflags --libs jsoncpp` -Wall
 
-build: clean
-	@mkdir -p build
+build:
 	clang++ ${CFLAGS} -Wall -O3 -o build/process process.cpp main.cpp
 
-clean:
-	@rm -rf build
-
-run: build
+run:
 	@build/process Name ../test_data
 
-memcheck: build
+memcheck:
 	valgrind --gen-suppressions=all --leak-check=full --show-leak-kinds=all --show-reachable=no --show-possibly-lost=no --dsymutil=yes build/process Name ../test_data/
 
-test: clean
-	@mkdir -p build
+test:
 	@clang++ ${CFLAGS} -lgtest -o build/test process.cpp test.cpp
 	build/test

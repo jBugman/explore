@@ -1,4 +1,4 @@
-install:
+deps:
 	cabal sandbox init
 	cabal update
 	cabal configure -O2

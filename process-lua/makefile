@@ -1,4 +1,4 @@
-install:
+deps:
 	luarocks-5.1 install luafilesystem
 	luarocks-5.1 install lua-glob-pattern
 	luarocks-5.1 install lua-cjson

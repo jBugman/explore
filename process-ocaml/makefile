@@ -1,4 +1,4 @@
-install:
+deps:
 	opam init
 	eval `opam config env`
 	opam install core yojson

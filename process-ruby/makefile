@@ -1,2 +1,2 @@
 run:
-	ruby bin/process
+	ruby bin/process Name ../test_data/

@@ -1,5 +1,9 @@
-build:
+.PHONY: build
+
+deps:
 	rebar get-deps
+
+build:
 	rebar compile
 
 run:

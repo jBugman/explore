@@ -1,4 +1,4 @@
-all: build run
+.PHONY: build
 
 CFLAGS = -fobjc-arc -fmodules -Wall -Wno-objc-designated-initializers -ICHCSVParser
 
@@ -7,14 +7,10 @@ deps:
 	cp -rf Pods/CHCSVParser/CHCSVParser/CHCSVParser .
 	rm -rf ./Pods
 
-build: clean
-	@mkdir -p build
+build:
 	clang $(CFLAGS) -O2 -o build/process CHCSVParser/CHCSVParser.m process.m main.m
 
-clean:
-	@rm -rf build
-
-run: build
+run:
 	build/process Name ../test_data/
 
 test:
