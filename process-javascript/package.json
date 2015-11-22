@@ -1,0 +1,21 @@
+{
+  "name": "process-javascript",
+  "version": "0.1.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+      "test": "node_modules/.bin/mocha"
+  },
+  "author": "Sergey Parshukov",
+  "license": "MIT",
+  "dependencies": {
+      "csv-stringify": "0.0.8",
+      "stream-array": "^1.1.1"
+  },
+  "directories": {
+      "test": "test"
+  },
+  "devDependencies": {
+      "mocha": "latest"
+  }
+}
