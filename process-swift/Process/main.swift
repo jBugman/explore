@@ -6,15 +6,13 @@ func fail(message: String) -> Int32 {
 }
 
 func process(field: String, folder: String) -> Int32 {
-    let files = NSFileManager().contentsOfDirectoryAtPath(folder, error: nil)?
-    .map({ $0 as! String })
-    .filter({ $0.hasSuffix(".json") })
+    let files = try? NSFileManager().contentsOfDirectoryAtPath(folder).filter({ $0.hasSuffix(".json") })
 
     var frequencies = Dictionary<String, Int>()
     for filename in files! {
-        let path = folder.stringByAppendingPathComponent(filename)
-        if let rawJson = String(contentsOfFile: path, encoding: NSUTF8StringEncoding, error: nil)?.dataUsingEncoding(NSUTF8StringEncoding) {
-            if let json: AnyObject? = NSJSONSerialization.JSONObjectWithData(rawJson, options: NSJSONReadingOptions.allZeros, error: nil) {
+        let path = (folder as NSString).stringByAppendingPathComponent(filename)
+        if let rawJson = (try? String(contentsOfFile: path, encoding: NSUTF8StringEncoding))?.dataUsingEncoding(NSUTF8StringEncoding) {
+            if let json: AnyObject? = try? NSJSONSerialization.JSONObjectWithData(rawJson, options: NSJSONReadingOptions()) {
                 switch json?.valueForKey(field) {
                 case nil: return fail("Field is missing")
                 case let x as String where x == "": break
@@ -32,9 +30,9 @@ func process(field: String, folder: String) -> Int32 {
     }
 
     let csv = CHCSVWriter(forWritingToCSVFile: "output.csv")
-    let sorted = (frequencies as NSDictionary).keysSortedByValueUsingComparator({
+    (frequencies as NSDictionary).keysSortedByValueUsingComparator({
         ($1 as! NSNumber).compare($0 as! NSNumber)
-    }).map({ key -> () in
+    }).forEach({ key -> () in
         csv.writeField(key)
         csv.writeField(frequencies[key as! String]!)
         csv.finishLine()
@@ -46,5 +44,10 @@ if Process.argc < 3 {
     fputs("Args are: <field name> <folder>\n", stderr)
     exit(EXIT_FAILURE)
 } else {
-    exit(process(Process.arguments[1], Process.arguments[2]))
+    exit(process(Process.arguments[1], folder: Process.arguments[2]))
 }
+
+//// Benchmark
+//for (var i = 0; i < 100; i++) {
+//    process("Name", folder: "../test_data/")
+//}
