@@ -21,7 +21,7 @@ Should take folder and field as parameters. Then scan all JSON files in that fol
 	[ ] Nim
 	[✓] Objective-C
 	[✓] OCaml
-	[ ] Perl
+	[✓] Perl
 	[✓] Python
 	[✓] Ruby
 	[✓] Rust
