@@ -8,7 +8,6 @@ Should take folder and field as parameters. Then scan all JSON files in that fol
 	[✓] Elixir
 	[✓] Erlang
 	[ ] F#
-	[ ] Factor
 	[✓] Go
 	[✓] Haskell
 	[✓] Hy
