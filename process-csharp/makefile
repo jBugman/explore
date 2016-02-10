@@ -8,9 +8,10 @@ CSV_NAME = CsvHelper
 CSV_VERSION = 2.13.2.0
 CSV_PATH = lib/$(CSV_NAME).$(CSV_VERSION)/lib/net40-client/
 BUILD_DEPS = -lib:$(JSON_PATH),$(CSV_PATH) -r:$(JSON_NAME) -r:$(CSV_NAME)
+MONO_PATH = $(JSON_PATH):$(CSV_PATH)
 
 run:
-	MONO_PATH=$(JSON_PATH):$(CSV_PATH) mono build/process.exe Name ../test_data/
+	MONO_PATH=$(MONO_PATH) mono build/process.exe Name ../test_data/
 
 deps:
 	mono $(NUGET) install -o lib $(JSON_NAME) -version $(JSON_VERSION)
@@ -23,4 +24,4 @@ build:
 test:
 	@mkdir -p build
 	mcs -t:library $(BUILD_DEPS) -r:nunit.framework -out:build/process_test.dll process.cs process_test.cs
-	MONO_PATH=$(JSON_PATH) nunit-console build/process_test.dll -xml=/dev/null
+	MONO_PATH=$(MONO_PATH) nunit-console build/process_test.dll -xml=/dev/null

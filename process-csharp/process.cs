@@ -8,8 +8,8 @@ using CsvHelper;
 
 public class ProcessCsharp {
 
-    const int SUCCESS = 0;
-    const int FAIL    = 1;
+    public const int SUCCESS = 0;
+    public const int FAIL    = 1;
 
     static public int Process(String field, String folder) {
         var frequencies = new Dictionary<String, int>();

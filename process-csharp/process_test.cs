@@ -9,7 +9,7 @@ namespace ProcessCsharpTests {
 
         [Test()]
         public void ShouldWork() {
-            Assert.AreEqual(ProcessCsharp.Process("Name", "../../test_data"), 0);
+            Assert.AreEqual(ProcessCsharp.Process("Name", "../../test_data"), ProcessCsharp.SUCCESS);
         }
     }
 }
