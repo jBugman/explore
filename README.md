@@ -15,7 +15,7 @@ Should take folder and field as parameters. Then scan all JSON files in that fol
 	[✓] Io
 	[✓] Java
 	[✓] JavaScript (NodeJS)
-	[ ] Kotlin
+	[✓] Kotlin
 	[✓] Lua
 	[✓] Nim
 	[✓] Objective-C
